@@ -11,9 +11,3 @@ type User struct {
 	Age       string `json:"age"`
 	Email     string `json:"email"`
 }
-
-//ResponseResult struct
-type ResponseResult struct {
-	Error  string `json:"error"`
-	Result string `json:"result"`
-}
