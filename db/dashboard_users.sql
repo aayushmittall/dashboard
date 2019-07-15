@@ -23,15 +23,18 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `users` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Username` varchar(10) NOT NULL,
+  `Email` varchar(30) NOT NULL,
+  `Password` varchar(20) NOT NULL,
   `FirstName` varchar(10) DEFAULT NULL,
   `LastName` varchar(10) DEFAULT NULL,
-  `Password` varchar(20) DEFAULT NULL,
   `Gender` varchar(10) DEFAULT NULL,
   `Country` varchar(20) DEFAULT NULL,
   `Age` varchar(10) DEFAULT NULL,
-  `Email` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`Username`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `Email_UNIQUE` (`Email`),
+  UNIQUE KEY `Username_UNIQUE` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -44,4 +47,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-15 15:12:26
+-- Dump completed on 2019-07-15 22:33:04
