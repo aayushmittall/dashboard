@@ -46,21 +46,6 @@ class SignUp extends Component {
       body: JSON.stringify(data)
     };
     fetch("http://localhost:8000/signup", options);
-    // new Request(`http://127.0.0.1:8000/SignUp`, options);
-    // const response = await fetch(request);
-    // const status = await response.status;
-    // if (status === 201) {
-    //   this.fetchAll();
-    // }
-    // .then(res => res.json())
-    // .then(
-    //   result => {
-    //     this.setState({ response: result });
-    //   },
-    //   error => {
-    //     this.setState({ error });
-    //   }
-    // );
   }
 
   render() {
