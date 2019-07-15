@@ -26,7 +26,7 @@ CREATE TABLE `users` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Username` varchar(10) NOT NULL,
   `Email` varchar(30) NOT NULL,
-  `Password` varchar(20) NOT NULL,
+  `Password` varchar(100) NOT NULL,
   `FirstName` varchar(10) DEFAULT NULL,
   `LastName` varchar(10) DEFAULT NULL,
   `Gender` varchar(10) DEFAULT NULL,
@@ -47,4 +47,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-15 22:33:04
+-- Dump completed on 2019-07-15 22:54:23
