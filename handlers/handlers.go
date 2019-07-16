@@ -39,7 +39,6 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user model.User
-	var query model.User
 	var res string
 
 	body, err := ioutil.ReadAll(r.Body)
@@ -52,18 +51,7 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 		log.Panic(err)
 	}
 
-	stmtOut, err := db.Prepare("SELECT username FROM users WHERE (username  = ? OR email = ?) AND password =?")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer stmtOut.Close()
-	err = stmtOut.QueryRow(user.Email, user.Email, user.Password).Scan(&query)
-	if err != nil {
-		res = "Invalid Email/Password"
-		json.NewEncoder(w).Encode(res)
-		return
-	}
-	res = "Login Successful"
+	res = database.LoginUser(&user)
 	json.NewEncoder(w).Encode(res)
 
 }
