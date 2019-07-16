@@ -22,8 +22,8 @@ func main() {
 	flag.Parse()
 	r.PathPrefix("/home").Handler(http.StripPrefix("/home", http.FileServer(http.Dir(dir))))
 
-	r.HandleFunc("/signup", handlers.HandleSignUp)
-	r.HandleFunc("/signin", handlers.HandleSignIn)
+	r.HandleFunc("/signup", handlers.HandleSignUp).Methods("POST")
+	r.HandleFunc("/signin", handlers.HandleSignIn).Methods("POST")
 
 	log.Printf("Server Started")
 	log.Fatal(http.ListenAndServe(":8000", r))

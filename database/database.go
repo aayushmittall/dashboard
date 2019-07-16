@@ -4,6 +4,8 @@ import (
 	"dashboard/model"
 	"database/sql"
 	"log"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 var db *sql.DB
@@ -30,6 +32,12 @@ func InsertUser(user *model.User) string {
 	var result string
 	err = stmtOut.QueryRow(user.Username).Scan(&query)
 	if err != nil {
+		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 4)
+		if err != nil {
+			panic(err.Error())
+		}
+		user.Password = string(hash)
+
 		stmt, err := db.Prepare("INSERT INTO users(Username,FirstName,LastName,Password,Gender,Country,Age,Email) VALUES(?)")
 		if err != nil {
 			log.Panic(err)
@@ -50,16 +58,22 @@ func InsertUser(user *model.User) string {
 func LoginUser(user *model.User) string {
 	var res string
 
-	stmtOut, err := db.Prepare("SELECT username FROM users WHERE (username  = ? OR email = ?) AND password =?")
+	stmtOut, err := db.Prepare("SELECT password FROM users WHERE (username  = ? OR email = ?)")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmtOut.Close()
 	var query string
-	err = stmtOut.QueryRow(user.Email, user.Email, user.Password).Scan(&query)
+	err = stmtOut.QueryRow(user.Email, user.Email).Scan(&query)
 	if err != nil {
-		res = "Invalid Email/Password"
+		res = "Invalid Email/Username"
 	}
-	res = "Login Successful"
+	err = bcrypt.CompareHashAndPassword([]byte(query), []byte(user.Password))
+
+	if err != nil {
+		res = "Invalid password"
+	} else {
+		res = "Login Successful"
+	}
 	return res
 }
