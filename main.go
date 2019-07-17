@@ -1,7 +1,6 @@
 package main
 
 import (
-	"dashboard/database"
 	"dashboard/handlers"
 	"flag"
 	"log"
@@ -14,8 +13,6 @@ import (
 func main() {
 
 	r := mux.NewRouter()
-
-	database.Getdb()
 
 	var dir string
 	flag.StringVar(&dir, "dir", "./ui/build", "server for UI")

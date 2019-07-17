@@ -23,6 +23,13 @@ func Getdb() {
 
 //InsertUser func for sign_up
 func InsertUser(user *model.User) string {
+
+	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
+	if err != nil {
+		log.Panic(err.Error())
+	}
+	defer db.Close()
+
 	stmtOut, err := db.Prepare("SELECT username FROM users WHERE username  = ? ")
 	if err != nil {
 		panic(err.Error())
@@ -56,6 +63,14 @@ func InsertUser(user *model.User) string {
 
 //LoginUser func for sign_in
 func LoginUser(user *model.User) string {
+
+	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
+	if err != nil {
+		log.Panic(err.Error())
+
+	}
+	defer db.Close()
+
 	var res string
 
 	stmtOut, err := db.Prepare("SELECT password FROM users WHERE (username  = ? OR email = ?)")
