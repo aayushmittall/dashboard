@@ -11,16 +11,6 @@ import (
 var db *sql.DB
 var err error
 
-//Getdb func
-func Getdb() {
-	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
-	if err != nil {
-		log.Panic(err.Error())
-		return
-	}
-	defer db.Close()
-}
-
 //InsertUser func for sign_up
 func InsertUser(user *model.User) string {
 
