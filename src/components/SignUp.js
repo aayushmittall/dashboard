@@ -8,8 +8,8 @@ class SignUp extends Component {
     this.initialState = {
       email: "",
       password: "",
-      fname: "",
-      lname: "",
+      firstname: "",
+      lastname: "",
       age: "",
       username: "",
       country: "",
@@ -59,30 +59,30 @@ class SignUp extends Component {
       <div className="sign-up">
         <form onSubmit={this.handleSubmit} className="form-fields">
           <div className="form-field">
-            <label className="form-field-label" htmlFor="fname">
+            <label className="form-field-label" htmlFor="firstname">
               First Name
             </label>
             <input
               type="text"
-              id="fname"
+              id="firstname"
               className="form-field-input"
               placeholder="Enter your first name"
-              name="fname"
+              name="firstname"
               value={this.state.name}
               onChange={this.handleChange}
               required
             />
           </div>
           <div className="form-field">
-            <label className="form-field-label" htmlFor="lname">
+            <label className="form-field-label" htmlFor="lastname">
               Last Name
             </label>
             <input
               type="text"
-              id="lname"
+              id="lastname"
               className="form-field-input"
               placeholder="Enter your last name"
-              name="lname"
+              name="lastname"
               value={this.state.name}
               onChange={this.handleChange}
               required
