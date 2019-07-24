@@ -7,12 +7,15 @@
   background-color: rgb(32, 32, 30);
   color: rgb(199, 199, 199);
   min-height: 5vh;
-  text-align: center;
-  justify-content: center;
-  align-content: center;
-  text-transform: uppercase;
+  justify-content: space-around;
+  align-content: space-around;
   font-size: 150%;
   padding: 5px;
+  display: flex;
+}
+.logo {
+  width: 80%;
+  text-transform: uppercase;
 }
 .left {
   width: 80%;
@@ -62,6 +65,11 @@ select {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: black;
   border-bottom: 1px solid rgb(32, 32, 30);
+  text-decoration: none;
+}
+.nav-edit {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: rgb(199, 199, 199);
   text-decoration: none;
 }
 .sign-button {
