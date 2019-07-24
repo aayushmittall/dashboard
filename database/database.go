@@ -11,23 +11,30 @@ import (
 var db *sql.DB
 var err error
 
-//InsertUser func for sign_up
-func InsertUser(user *model.User) string {
-
+//InitialiseDb to start db server
+func InitialiseDb() {
 	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
 	if err != nil {
 		log.Panic(err.Error())
 	}
-	defer db.Close()
+}
+
+//CloseDb to close DB connection
+func CloseDb() {
+	db.Close()
+}
+
+//InsertUser func for sign_up
+func InsertUser(user *model.UserProfile) string {
 
 	stmtOut, err := db.Prepare("SELECT username FROM users WHERE username  = ? ")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmtOut.Close()
-	var query string
+	var username string
 	var result string
-	err = stmtOut.QueryRow(user.Username).Scan(&query)
+	err = stmtOut.QueryRow(user.Username).Scan(&username)
 	if err != nil {
 		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 4)
 		if err != nil {
@@ -35,7 +42,7 @@ func InsertUser(user *model.User) string {
 		}
 		user.Password = string(hash)
 
-		stmt, err := db.Prepare("INSERT INTO users(Username,FirstName,LastName,Password,Gender,Country,Age,Email) VALUES(?)")
+		stmt, err := db.Prepare("INSERT INTO users(Username,FirstName,LastName,Password,Gender,Country,Age,Email) VALUES(?,?,?,?,?,?,?,?)")
 		if err != nil {
 			log.Panic(err)
 		}
@@ -52,7 +59,7 @@ func InsertUser(user *model.User) string {
 }
 
 //LoginUser func for sign_in
-func LoginUser(user *model.User) string {
+func LoginUser(user *model.UserProfile) string {
 
 	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
 	if err != nil {
@@ -68,12 +75,12 @@ func LoginUser(user *model.User) string {
 		panic(err.Error())
 	}
 	defer stmtOut.Close()
-	var query string
-	err = stmtOut.QueryRow(user.Email, user.Email).Scan(&query)
+	var password string
+	err = stmtOut.QueryRow(user.Email, user.Email).Scan(&password)
 	if err != nil {
 		res = "Invalid Email/Username"
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(query), []byte(user.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
 
 	if err != nil {
 		res = "Invalid password"

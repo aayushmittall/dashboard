@@ -1,7 +1,7 @@
 package model
 
-//User struct
-type User struct {
+//UserProfile struct
+type UserProfile struct {
 	Username  string `json:"username"`
 	FirstName string `json:"firstname"`
 	LastName  string `json:"lastname"`
