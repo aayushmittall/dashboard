@@ -60,3 +60,27 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) error {
 	}
 	return nil
 }
+
+//HandleEditProfile func
+func HandleEditProfile(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Content-Type", "application/json")
+	var user model.UserProfile
+	var err error
+	var res string
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		return err
+	}
+	err = database.UpdateProfile(&user)
+	if err == nil {
+		res = "Update Successful"
+		json.NewEncoder(w).Encode(res)
+
+	}
+	return nil
+}
