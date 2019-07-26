@@ -11,3 +11,9 @@ type UserProfile struct {
 	Age       string `json:"age"`
 	Email     string `json:"email"`
 }
+
+//UserAuth struct
+type UserAuth struct {
+	Username string `json:"username"`
+	Token    string `json:"token"`
+}
