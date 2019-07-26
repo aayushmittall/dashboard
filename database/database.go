@@ -21,7 +21,7 @@ func CloseDb() {
 	db.Close()
 }
 
-//GetUserByUsername func for sign_up
+//GetUserByUsername func to get user by username
 func GetUserByUsername(username string) (*model.UserProfile, error) {
 	var err error
 	var profile *model.UserProfile
@@ -34,18 +34,23 @@ func GetUserByUsername(username string) (*model.UserProfile, error) {
 	return profile, err
 }
 
-//InsertUserProfile func for sign_up
+//EncryptPassword to secure passwords
+func EncryptPassword(userpassword string) string {
+	hash, err := bcrypt.GenerateFromPassword([]byte(userpassword), 4)
+	if err != nil {
+		return err.Error()
+	}
+	userpassword = string(hash)
+	return userpassword
+}
+
+//InsertUserProfile func to insert user profile
 func InsertUserProfile(user *model.UserProfile) error {
 	var profile *model.UserProfile
 	var err error
 	profile, err = GetUserByUsername(user.Username)
 	if profile == nil && err != nil {
-		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 4)
-		if err != nil {
-			return err
-		}
-		user.Password = string(hash)
-
+		user.Password = EncryptPassword(user.Password)
 		stmt, err := db.Prepare("INSERT INTO user_profile(Username,FirstName,LastName,Password,Gender,Country,Age,Email) VALUES(?,?,?,?,?,?,?,?)")
 		if err != nil {
 			return err
