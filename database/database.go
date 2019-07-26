@@ -3,7 +3,6 @@ package database
 import (
 	"dashboard/model"
 	"database/sql"
-	"log"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -11,12 +10,10 @@ import (
 var db *sql.DB
 
 //InitialiseDb to start db server
-func InitialiseDb() {
+func InitialiseDb() error {
 	var err error
 	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
-	if err != nil {
-		log.Panic(err.Error())
-	}
+	return err
 }
 
 //CloseDb to close DB connection
@@ -25,38 +22,39 @@ func CloseDb() {
 }
 
 //GetUserByUsername func for sign_up
-func GetUserByUsername(user *model.UserProfile) (*model.UserProfile, error) {
+func GetUserByUsername(username string) (*model.UserProfile, error) {
 	var err error
-	stmtOut, err := db.Prepare("SELECT username FROM user_profile WHERE username  = ? ")
+	var profile *model.UserProfile
+	stmtOut, err := db.Prepare("SELECT * FROM user_profile WHERE username  = ? ")
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
 	defer stmtOut.Close()
-	var username string
-	err = stmtOut.QueryRow(user.Username).Scan(&username)
-	return user, err
+	err = stmtOut.QueryRow(username).Scan(&profile.Username, &profile.FirstName, &profile.LastName, &profile.Password, &profile.Gender, &profile.Country, &profile.Age, &profile.Email)
+	return profile, err
 }
 
 //InsertUserProfile func for sign_up
 func InsertUserProfile(user *model.UserProfile) error {
+	var profile *model.UserProfile
 	var err error
-	_, err = GetUserByUsername(user)
-	if err != nil {
+	profile, err = GetUserByUsername(user.Username)
+	if profile == nil && err != nil {
 		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 4)
 		if err != nil {
-			panic(err.Error())
+			return err
 		}
 		user.Password = string(hash)
 
 		stmt, err := db.Prepare("INSERT INTO user_profile(Username,FirstName,LastName,Password,Gender,Country,Age,Email) VALUES(?,?,?,?,?,?,?,?)")
 		if err != nil {
-			log.Panic(err)
+			return err
 		}
 		defer stmt.Close()
 
 		_, err = stmt.Exec(user.Username, user.FirstName, user.LastName, user.Password, user.Gender, user.Country, user.Age, user.Email)
 		if err != nil {
-			log.Panic(err)
+			return err
 		}
 	}
 	return err
@@ -66,10 +64,9 @@ func InsertUserProfile(user *model.UserProfile) error {
 func LoginUser(user *model.UserProfile) string {
 	var err error
 	var res string
-
 	stmtOut, err := db.Prepare("SELECT password FROM user_profile WHERE (username  = ? OR email = ?)")
 	if err != nil {
-		panic(err.Error())
+		return res
 	}
 	defer stmtOut.Close()
 	var password string
