@@ -65,26 +65,35 @@ func InsertUserProfile(user *model.UserProfile) error {
 	return err
 }
 
-//LoginUser func for sign_in
-func LoginUser(user *model.UserProfile) string {
+//GenerateToken func to add token in db
+func GenerateToken(username string) error {
+	var userAuth *model.UserAuth
 	var err error
-	var res string
-	stmtOut, err := db.Prepare("SELECT password FROM user_profile WHERE (username  = ? OR email = ?)")
+	userAuth.Token = EncryptPassword(username)
+	userAuth.Username = username
+	stmt, err := db.Prepare("INSERT INTO user_auth(Username,Token) VALUES(?,?)")
 	if err != nil {
-		return res
+		return err
 	}
-	defer stmtOut.Close()
-	var password string
-	err = stmtOut.QueryRow(user.Email, user.Email).Scan(&password)
+	defer stmt.Close()
+	_, err = stmt.Exec(userAuth.Username, userAuth.Username)
 	if err != nil {
-		res = "Invalid Email/Username"
+		return err
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
+	return nil
+}
 
-	if err != nil {
-		res = "Invalid password"
-	} else {
-		res = "Login Successful"
+//LoginUser func for sign_in
+func LoginUser(user *model.UserProfile) error {
+	var profile *model.UserProfile
+	var err error
+	profile, err = GetUserByUsername(user.Username)
+	if err == nil {
+		err = bcrypt.CompareHashAndPassword([]byte(profile.Password), []byte(user.Password))
+		if err != nil {
+			return err
+		}
+		err = GenerateToken(user.Username)
 	}
-	return res
+	return nil
 }
