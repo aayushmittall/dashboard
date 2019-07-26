@@ -97,3 +97,19 @@ func LoginUser(user *model.UserProfile) error {
 	}
 	return nil
 }
+
+//UpdateProfile func to update details
+func UpdateProfile(user *model.UserProfile) error {
+	var err error
+	stmt, err := db.Prepare("UPDATE user_profile set FirstName=?,LastName=?,Gender=?,Country=?,Age=?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(user.FirstName, user.LastName, user.Gender, user.Country, user.Age)
+	if err != nil {
+		return err
+	}
+	return nil
+}
