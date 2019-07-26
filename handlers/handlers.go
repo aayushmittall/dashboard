@@ -12,16 +12,14 @@ import (
 func HandleSignUp(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "application/json")
 
-	var err error
-
 	var user model.UserProfile
+	var err error
 	var res string
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return err
 	}
-
 	err = json.Unmarshal(body, &user)
 	if err != nil {
 		return err
@@ -40,6 +38,7 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) error {
 //HandleSignIn func
 func HandleSignIn(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "application/json")
+
 	var user model.UserProfile
 	var res string
 	var err error
@@ -54,7 +53,10 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	res = database.LoginUser(&user)
-	json.NewEncoder(w).Encode(res)
-	return err
+	err = database.LoginUser(&user)
+	if err == nil {
+		res = "Log In Successful"
+		json.NewEncoder(w).Encode(res)
+	}
+	return nil
 }
