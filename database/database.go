@@ -9,10 +9,10 @@ import (
 )
 
 var db *sql.DB
-var err error
 
 //InitialiseDb to start db server
 func InitialiseDb() {
+	var err error
 	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
 	if err != nil {
 		log.Panic(err.Error())
@@ -24,17 +24,23 @@ func CloseDb() {
 	db.Close()
 }
 
-//InsertUser func for sign_up
-func InsertUser(user *model.UserProfile) string {
-
-	stmtOut, err := db.Prepare("SELECT username FROM users WHERE username  = ? ")
+//GetUserByUsername func for sign_up
+func GetUserByUsername(user *model.UserProfile) (*model.UserProfile, error) {
+	var err error
+	stmtOut, err := db.Prepare("SELECT username FROM user_profile WHERE username  = ? ")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmtOut.Close()
 	var username string
-	var result string
 	err = stmtOut.QueryRow(user.Username).Scan(&username)
+	return user, err
+}
+
+//InsertUserProfile func for sign_up
+func InsertUserProfile(user *model.UserProfile) error {
+	var err error
+	_, err = GetUserByUsername(user)
 	if err != nil {
 		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 4)
 		if err != nil {
@@ -42,7 +48,7 @@ func InsertUser(user *model.UserProfile) string {
 		}
 		user.Password = string(hash)
 
-		stmt, err := db.Prepare("INSERT INTO users(Username,FirstName,LastName,Password,Gender,Country,Age,Email) VALUES(?,?,?,?,?,?,?,?)")
+		stmt, err := db.Prepare("INSERT INTO user_profile(Username,FirstName,LastName,Password,Gender,Country,Age,Email) VALUES(?,?,?,?,?,?,?,?)")
 		if err != nil {
 			log.Panic(err)
 		}
@@ -52,25 +58,16 @@ func InsertUser(user *model.UserProfile) string {
 		if err != nil {
 			log.Panic(err)
 		}
-		result = "Registration Successful"
 	}
-	result = "Already Registered Username"
-	return result
+	return err
 }
 
 //LoginUser func for sign_in
 func LoginUser(user *model.UserProfile) string {
-
-	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
-	if err != nil {
-		log.Panic(err.Error())
-
-	}
-	defer db.Close()
-
+	var err error
 	var res string
 
-	stmtOut, err := db.Prepare("SELECT password FROM users WHERE (username  = ? OR email = ?)")
+	stmtOut, err := db.Prepare("SELECT password FROM user_profile WHERE (username  = ? OR email = ?)")
 	if err != nil {
 		panic(err.Error())
 	}

@@ -11,11 +11,12 @@ import (
 )
 
 var db *sql.DB
-var err error
 
 //HandleSignUp func
 func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	var err error
 
 	var user model.UserProfile
 	var res string
@@ -30,8 +31,12 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 		log.Panic(err)
 	}
 
-	res = database.InsertUser(&user)
-	json.NewEncoder(w).Encode(res)
+	err = database.InsertUserProfile(&user)
+	if err == nil {
+		res = "Sign Up Successful"
+		json.NewEncoder(w).Encode(res)
+
+	}
 
 }
 
@@ -40,6 +45,7 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user model.UserProfile
 	var res string
+	var err error
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
