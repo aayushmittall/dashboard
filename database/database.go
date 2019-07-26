@@ -76,7 +76,7 @@ func GenerateToken(username string) error {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(userAuth.Username, userAuth.Username)
+	_, err = stmt.Exec(userAuth.Username, userAuth.Token)
 	if err != nil {
 		return err
 	}
