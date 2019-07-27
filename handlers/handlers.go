@@ -5,11 +5,12 @@ import (
 	"dashboard/model"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
 //HandleSignUp func
-func HandleSignUp(w http.ResponseWriter, r *http.Request) error {
+func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var user model.UserProfile
@@ -18,11 +19,11 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) error {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return err
+		log.Print(err)
 	}
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		return err
+		log.Print(err)
 	}
 
 	err = database.InsertUserProfile(&user)
@@ -31,12 +32,10 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) error {
 		json.NewEncoder(w).Encode(res)
 
 	}
-	return err
-
 }
 
 //HandleSignIn func
-func HandleSignIn(w http.ResponseWriter, r *http.Request) error {
+func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var user model.UserProfile
@@ -45,12 +44,12 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) error {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return err
+		log.Print(err)
 	}
 
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		return err
+		log.Print(err)
 	}
 
 	err = database.LoginUser(&user)
@@ -58,11 +57,10 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) error {
 		res = "Log In Successful"
 		json.NewEncoder(w).Encode(res)
 	}
-	return nil
 }
 
 //HandleEditProfile func
-func HandleEditProfile(w http.ResponseWriter, r *http.Request) error {
+func HandleEditProfile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user model.UserProfile
 	var err error
@@ -70,11 +68,11 @@ func HandleEditProfile(w http.ResponseWriter, r *http.Request) error {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return err
+		log.Print(err)
 	}
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		return err
+		log.Print(err)
 	}
 	err = database.UpdateProfile(&user)
 	if err == nil {
@@ -82,5 +80,4 @@ func HandleEditProfile(w http.ResponseWriter, r *http.Request) error {
 		json.NewEncoder(w).Encode(res)
 
 	}
-	return nil
 }

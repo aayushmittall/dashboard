@@ -32,6 +32,7 @@ func main() {
 	go func() {
 		log.Fatal(http.ListenAndServe(":8000", r))
 	}()
+
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt)
 	signal.Notify(stop, syscall.SIGINT)

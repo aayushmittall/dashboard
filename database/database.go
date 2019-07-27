@@ -3,6 +3,7 @@ package database
 import (
 	"dashboard/model"
 	"database/sql"
+	"log"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -13,6 +14,7 @@ var db *sql.DB
 func InitialiseDb() error {
 	var err error
 	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
+	log.Print(err)
 	return err
 }
 
@@ -27,6 +29,7 @@ func GetUserByUsername(username string) (*model.UserProfile, error) {
 	var profile *model.UserProfile
 	stmtOut, err := db.Prepare("SELECT * FROM user_profile WHERE username  = ? ")
 	if err != nil {
+		log.Print(err)
 		return nil, err
 	}
 	defer stmtOut.Close()
@@ -35,30 +38,40 @@ func GetUserByUsername(username string) (*model.UserProfile, error) {
 }
 
 //EncryptPassword to secure passwords
-func EncryptPassword(userpassword string) string {
+func EncryptPassword(userpassword string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(userpassword), 4)
 	if err != nil {
-		return err.Error()
+		log.Print(err)
+		return userpassword, err
 	}
 	userpassword = string(hash)
-	return userpassword
+	return userpassword, nil
 }
 
 //InsertUserProfile func to insert user profile
 func InsertUserProfile(user *model.UserProfile) error {
 	var profile *model.UserProfile
+	var hashedpassword string
 	var err error
 	profile, err = GetUserByUsername(user.Username)
 	if profile == nil && err != nil {
-		user.Password = EncryptPassword(user.Password)
+		hashedpassword, err = EncryptPassword(user.Password)
+		if err == nil {
+			user.Password = hashedpassword
+		} else {
+			log.Print(err)
+			return err
+		}
 		stmt, err := db.Prepare("INSERT INTO user_profile(Username,FirstName,LastName,Password,Gender,Country,Age,Email) VALUES(?,?,?,?,?,?,?,?)")
 		if err != nil {
+			log.Print(err)
 			return err
 		}
 		defer stmt.Close()
 
 		_, err = stmt.Exec(user.Username, user.FirstName, user.LastName, user.Password, user.Gender, user.Country, user.Age, user.Email)
 		if err != nil {
+			log.Print(err)
 			return err
 		}
 	}
@@ -68,16 +81,25 @@ func InsertUserProfile(user *model.UserProfile) error {
 //GenerateToken func to add token in db
 func GenerateToken(username string) error {
 	var userAuth *model.UserAuth
+	var hashedtoken string
 	var err error
-	userAuth.Token = EncryptPassword(username)
+	hashedtoken, err = EncryptPassword(username)
+	if err == nil {
+		userAuth.Token = hashedtoken
+	} else {
+		log.Print(err)
+		return err
+	}
 	userAuth.Username = username
 	stmt, err := db.Prepare("INSERT INTO user_auth(Username,Token) VALUES(?,?)")
 	if err != nil {
+		log.Print(err)
 		return err
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(userAuth.Username, userAuth.Token)
 	if err != nil {
+		log.Print(err)
 		return err
 	}
 	return nil
@@ -91,6 +113,7 @@ func LoginUser(user *model.UserProfile) error {
 	if err == nil {
 		err = bcrypt.CompareHashAndPassword([]byte(profile.Password), []byte(user.Password))
 		if err != nil {
+			log.Print(err)
 			return err
 		}
 		err = GenerateToken(user.Username)
@@ -103,12 +126,14 @@ func UpdateProfile(user *model.UserProfile) error {
 	var err error
 	stmt, err := db.Prepare("UPDATE user_profile set FirstName=?,LastName=?,Gender=?,Country=?,Age=?")
 	if err != nil {
+		log.Print(err)
 		return err
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(user.FirstName, user.LastName, user.Gender, user.Country, user.Age)
 	if err != nil {
+		log.Print(err)
 		return err
 	}
 	return nil
