@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 class SignIn extends Component {
   constructor(props) {
     super(props);
-    this.state = { email: "", password: "", username: "", response: "" };
+    this.state = { email: "", password: "", username: "" };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,6 +43,8 @@ class SignIn extends Component {
   render() {
     return (
       <div className="sign-in">
+        <h2 className="form-title">Sign In</h2>
+
         <form onSubmit={this.handleSubmit} className="form-fields">
           <div className="form-field">
             <label className="form-field-label" htmlFor="email">
@@ -88,7 +90,6 @@ class SignIn extends Component {
             </Link>
           </div>
         </form>
-        <div>{this.response}</div>
       </div>
     );
   }

@@ -1,33 +1,38 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { HashRouter as Router, Route } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import "./App.css";
 import SignIn from "./components/SignIn";
+import EditProfile from "./components/EditProfile";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: "Guest"
-    };
-  }
-  user(data) {
-    this.setState({ user: data });
+  constructor() {
+    super();
+    this.state = { isLoggedIn: false };
   }
   render() {
     return (
       <Router className="base">
         <nav className="nav">
-          <div>Analytics Dashboard</div>
-          <div> {this.state.user} </div>{" "}
+          <div className="logo">
+            <Link to="/" className="nav-edit">
+              Analytics Dashboard
+            </Link>
+          </div>
+          <div>
+            <Link to="/edit-profile" className="nav-edit">
+              Edit Profile
+            </Link>
+          </div>
         </nav>
 
         <div className="app">
           <div className="left" />
           <div className="app-form">
-            <h2 className="form-title">Sign Up/Sign In</h2>
             <Route exact path="/" component={SignUp} />
             <Route exact path="/sign-in" component={SignIn} />
+            <Route exact path="/edit-profile" component={EditProfile} />
           </div>
         </div>
       </Router>

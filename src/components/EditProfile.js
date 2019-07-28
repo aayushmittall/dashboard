@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 
-class SignUp extends Component {
+class EditProfile extends Component {
   constructor(props) {
     super(props);
 
@@ -37,9 +36,8 @@ class SignUp extends Component {
     console.log(this.state);
     const data = this.state;
     console.log(JSON.stringify(data));
-    let response;
 
-    let apiUrl = "http://localhost:8000/signup";
+    let apiUrl = "http://localhost:8000/editprofile";
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const options = {
@@ -52,14 +50,12 @@ class SignUp extends Component {
       .then(result => {
         this.setState({ response: result.res });
       });
-    alert({ response });
   }
 
   render() {
     return (
       <div className="sign-up">
-        <h2 className="form-title">Sign Up</h2>
-
+        <h2>Edit Profile</h2>
         <form onSubmit={this.handleSubmit} className="form-fields">
           <div className="form-field">
             <label className="form-field-label" htmlFor="firstname">
@@ -201,25 +197,13 @@ class SignUp extends Component {
           </div>
 
           <div className="form-field">
-            <label className="form-field-checkbox">
-              <input className="form-field-checkbox" type="checkbox" required />
-              I agree all terms and conditions.
-            </label>
-          </div>
-
-          <div className="form-field">
             <button type="submit" className="sign-button">
-              Sign Up
+              Submit
             </button>
-          </div>
-          <div className="form-field">
-            <Link to="/sign-in" className="link-already">
-              Already Signed Up?
-            </Link>
           </div>
         </form>
       </div>
     );
   }
 }
-export default SignUp;
+export default EditProfile;
