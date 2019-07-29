@@ -9,13 +9,19 @@ import (
 	"net/http"
 )
 
+//Response struct
+type Response struct {
+	Token  string `json:"token"`
+	Result string `json:"result"`
+}
+
 //HandleSignUp func
 func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var user model.UserProfile
+	var response Response
 	var err error
-	var res string
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -33,8 +39,8 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 		json.NewEncoder(w).Encode(err.Error())
 	}
-	res = "Sign Up Successful"
-	json.NewEncoder(w).Encode(res)
+	response.Result = "Sign Up Successful"
+	json.NewEncoder(w).Encode(response)
 
 }
 
@@ -43,9 +49,8 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var user model.UserProfile
-	var token string
+	var response Response
 	var err error
-
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Print(err)
@@ -60,11 +65,12 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	token, err = database.LoginUser(&user)
+	response.Token, err = database.LoginUser(&user)
 	if err != nil {
 		log.Print(err)
 		json.NewEncoder(w).Encode(err.Error())
 	}
-	json.NewEncoder(w).Encode(token)
+	response.Result = "Login Successful"
+	json.NewEncoder(w).Encode(response)
 
 }
