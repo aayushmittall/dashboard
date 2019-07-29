@@ -16,8 +16,11 @@ var db *sql.DB
 func InitialiseDb() error {
 	var err error
 	db, err = sql.Open("mysql", "root:mysql1234@tcp(localhost:3306)/dashboard")
-	log.Print(err)
-	return err
+	if err != nil {
+		log.Print(err)
+		return err
+	}
+	return nil
 }
 
 //CloseDb to close DB connection
