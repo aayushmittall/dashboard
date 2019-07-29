@@ -20,18 +20,22 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Print(err)
+		json.NewEncoder(w).Encode(err)
 	}
 	err = json.Unmarshal(body, &user)
 	if err != nil {
 		log.Print(err)
+		json.NewEncoder(w).Encode(err)
 	}
 
 	err = database.InsertUserProfile(&user)
-	if err == nil {
-		res = "Sign Up Successful"
-		json.NewEncoder(w).Encode(res)
-
+	if err != nil {
+		log.Print(err)
+		json.NewEncoder(w).Encode(err)
 	}
+	res = "Sign Up Successful"
+	json.NewEncoder(w).Encode(res)
+
 }
 
 //HandleSignIn func
@@ -39,22 +43,28 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var user model.UserProfile
-	var res string
+	var token string
 	var err error
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Print(err)
+		json.NewEncoder(w).Encode(err)
+
 	}
 
 	err = json.Unmarshal(body, &user)
 	if err != nil {
 		log.Print(err)
+		json.NewEncoder(w).Encode(err)
+
 	}
 
-	err = database.LoginUser(&user)
-	if err == nil {
-		res = "Log In Successful"
-		json.NewEncoder(w).Encode(res)
+	token, err = database.LoginUser(&user)
+	if err != nil {
+		log.Print(err)
+		json.NewEncoder(w).Encode(err)
 	}
+	json.NewEncoder(w).Encode(token)
+
 }
