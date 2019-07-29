@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 //UserProfile struct
 type UserProfile struct {
 	Username  string `json:"username"`
@@ -14,6 +16,7 @@ type UserProfile struct {
 
 //UserAuth struct
 type UserAuth struct {
-	Username string `json:"username"`
-	Token    string `json:"token"`
+	UID           int       `json:"uid"`
+	Token         string    `json:"token"`
+	TimeGenerated time.Time `json:"timegenerated"`
 }
