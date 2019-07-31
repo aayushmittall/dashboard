@@ -64,7 +64,6 @@ class SignUp extends Component {
               type="text"
               id="firstname"
               className="form-field-input"
-              placeholder="Enter your first name"
               name="firstname"
               value={this.state.name}
               onChange={this.handleChange}
@@ -79,7 +78,6 @@ class SignUp extends Component {
               type="text"
               id="lastname"
               className="form-field-input"
-              placeholder="Enter your last name"
               name="lastname"
               value={this.state.name}
               onChange={this.handleChange}
@@ -94,7 +92,7 @@ class SignUp extends Component {
               type="email"
               id="email"
               className="form-field-input"
-              placeholder="Enter your email"
+              placeholder="email"
               name="email"
               value={this.state.email}
               onChange={this.handleChange}
@@ -109,7 +107,6 @@ class SignUp extends Component {
               type="password"
               id="password"
               className="form-field-input"
-              placeholder="Enter your password"
               name="password"
               value={this.state.password}
               onChange={this.handleChange}
@@ -126,7 +123,6 @@ class SignUp extends Component {
               type="text"
               id="username"
               className="form-field-input"
-              placeholder="Enter your first name"
               name="username"
               value={this.state.name}
               onChange={this.handleChange}
@@ -187,7 +183,6 @@ class SignUp extends Component {
               type="text"
               id="country"
               className="form-field-input"
-              placeholder="Enter your country"
               name="country"
               value={this.state.name}
               onChange={this.handleChange}

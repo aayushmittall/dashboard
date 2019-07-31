@@ -25,7 +25,6 @@ class SignIn extends Component {
     console.log("The form was submitted with the following data:");
     console.log(this.state);
     const data = this.state;
-
     let apiUrl = "http://localhost:8000/signin";
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -46,13 +45,13 @@ class SignIn extends Component {
         <form onSubmit={this.handleSubmit} className="form-fields">
           <div className="form-field">
             <label className="form-field-label" htmlFor="email">
-              E-Mail Address
+              E-Mail/Username
             </label>
             <input
               type="email"
               id="email"
               className="form-field-input"
-              placeholder="Enter your email"
+              placeholder="email"
               name="email"
               value={this.state.email}
               onChange={this.handleChange}
@@ -67,7 +66,7 @@ class SignIn extends Component {
               type="password"
               id="password"
               className="form-field-input"
-              placeholder="Enter your password"
+              placeholder="password"
               name="password"
               value={this.state.password}
               onChange={this.handleChange}
