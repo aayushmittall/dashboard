@@ -29,18 +29,17 @@ func CloseDb() {
 }
 
 //GetUserByUsername func to get user by username
-func GetUserByUsername(username string) (*model.UserProfile, int, error) {
+func GetUserByUsername(username string) (*model.UserProfile, error) {
 	var err error
 	var profile *model.UserProfile
-	var UserID int
 	stmtOut, err := db.Prepare("SELECT * FROM user_profile WHERE username  = ? ")
 	if err != nil {
 		log.Print(err)
 		return nil, 0, err
 	}
 	defer stmtOut.Close()
-	err = stmtOut.QueryRow(username).Scan(&UserID, &profile.Username, &profile.FirstName, &profile.LastName, &profile.Password, &profile.Gender, &profile.Country, &profile.Age, &profile.Email)
-	return profile, UserID, err
+	err = stmtOut.QueryRow(username).Scan(&profile.ID, &profile.Username, &profile.FirstName, &profile.LastName, &profile.Password, &profile.Gender, &profile.Country, &profile.Age, &profile.Email)
+	return profile, err
 }
 
 //EncryptPassword to secure passwords
@@ -59,7 +58,7 @@ func InsertUserProfile(user *model.UserProfile) error {
 	var profile *model.UserProfile
 	var hashedpassword string
 	var err error
-	profile, _, err = GetUserByUsername(user.Username)
+	profile, err = GetUserByUsername(user.Username)
 	if profile == nil && err != nil {
 		hashedpassword, err = EncryptPassword(user.Password)
 		if err != nil {
@@ -117,9 +116,8 @@ func GenerateToken() string {
 func LoginUser(user *model.UserProfile) (string, error) {
 	var profile *model.UserProfile
 	var token string
-	var UserID int
 	var err error
-	profile, UserID, err = GetUserByUsername(user.Username)
+	profile, err = GetUserByUsername(user.Username)
 	if err != nil {
 		log.Print(err)
 		return "", err
@@ -130,7 +128,7 @@ func LoginUser(user *model.UserProfile) (string, error) {
 		return "", err
 	}
 	token = GenerateToken()
-	err = InsertUserAuth(UserID, token)
+	err = InsertUserAuth(profile.ID, token)
 	if err != nil {
 		log.Print(err)
 		return "", err
