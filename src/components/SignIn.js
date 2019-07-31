@@ -20,7 +20,7 @@ class SignIn extends Component {
     });
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
     console.log("The form was submitted with the following data:");
     console.log(this.state);
@@ -34,11 +34,9 @@ class SignIn extends Component {
       body: JSON.stringify(data),
       myHeaders
     };
-    fetch(apiUrl, options)
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ response: result.res });
-      });
+    const response = await fetch(apiUrl, options);
+    const responsedata = await response.json();
+    console.log(responsedata);
   }
   render() {
     return (

@@ -31,14 +31,12 @@ class SignUp extends Component {
     });
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
     console.log("The form was submitted with the following data:");
     console.log(this.state);
     const data = this.state;
     console.log(JSON.stringify(data));
-    let response;
-
     let apiUrl = "http://localhost:8000/signup";
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -47,12 +45,9 @@ class SignUp extends Component {
       body: JSON.stringify(data),
       myHeaders
     };
-    fetch(apiUrl, options)
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ response: result.res });
-      });
-    alert({ response });
+    const response = await fetch(apiUrl, options);
+    const responsedata = await response.json();
+    console.log(responsedata);
   }
 
   render() {
