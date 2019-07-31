@@ -7,8 +7,8 @@ import SignIn from "./components/SignIn";
 import EditProfile from "./components/EditProfile";
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { isLoggedIn: false };
   }
   render() {
