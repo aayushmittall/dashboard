@@ -35,7 +35,7 @@ func GetUserByUsername(username string) (*model.UserProfile, error) {
 	stmtOut, err := db.Prepare("SELECT * FROM user_profile WHERE username  = ? ")
 	if err != nil {
 		log.Print(err)
-		return nil, 0, err
+		return nil, err
 	}
 	defer stmtOut.Close()
 	err = stmtOut.QueryRow(username).Scan(&profile.ID, &profile.Username, &profile.FirstName, &profile.LastName, &profile.Password, &profile.Gender, &profile.Country, &profile.Age, &profile.Email)
