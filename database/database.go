@@ -32,15 +32,15 @@ func CloseDb() {
 func GetUserByUsername(username string) (*model.UserProfile, int, error) {
 	var err error
 	var profile *model.UserProfile
-	var UID int
+	var UserID int
 	stmtOut, err := db.Prepare("SELECT * FROM user_profile WHERE username  = ? ")
 	if err != nil {
 		log.Print(err)
 		return nil, 0, err
 	}
 	defer stmtOut.Close()
-	err = stmtOut.QueryRow(username).Scan(&UID, &profile.Username, &profile.FirstName, &profile.LastName, &profile.Password, &profile.Gender, &profile.Country, &profile.Age, &profile.Email)
-	return profile, UID, err
+	err = stmtOut.QueryRow(username).Scan(&UserID, &profile.Username, &profile.FirstName, &profile.LastName, &profile.Password, &profile.Gender, &profile.Country, &profile.Age, &profile.Email)
+	return profile, UserID, err
 }
 
 //EncryptPassword to secure passwords
@@ -84,18 +84,18 @@ func InsertUserProfile(user *model.UserProfile) error {
 }
 
 //InsertUserAuth to insert token in db.
-func InsertUserAuth(UID int, Token string) error {
+func InsertUserAuth(UserID int, Token string) error {
 	var userAuth *model.UserAuth
-	userAuth.UID = UID
+	userAuth.UserID = UserID
 	userAuth.Token = Token
 	userAuth.TimeGenerated = time.Now()
-	stmt, err := db.Prepare("INSERT INTO user_auth(UID,Token,TimeGenerated) VALUES(?,?,?)")
+	stmt, err := db.Prepare("INSERT INTO user_auth(UserID,Token,TimeGenerated) VALUES(?,?,?)")
 	if err != nil {
 		log.Print(err)
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(userAuth.UID, userAuth.Token, userAuth.TimeGenerated)
+	_, err = stmt.Exec(userAuth.UserID, userAuth.Token, userAuth.TimeGenerated)
 	if err != nil {
 		log.Print(err)
 		return err
@@ -117,9 +117,9 @@ func GenerateToken() string {
 func LoginUser(user *model.UserProfile) (string, error) {
 	var profile *model.UserProfile
 	var token string
-	var UID int
+	var UserID int
 	var err error
-	profile, UID, err = GetUserByUsername(user.Username)
+	profile, UserID, err = GetUserByUsername(user.Username)
 	if err != nil {
 		log.Print(err)
 		return "", err
@@ -130,7 +130,7 @@ func LoginUser(user *model.UserProfile) (string, error) {
 		return "", err
 	}
 	token = GenerateToken()
-	err = InsertUserAuth(UID, token)
+	err = InsertUserAuth(UserID, token)
 	if err != nil {
 		log.Print(err)
 		return "", err
