@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 class SignIn extends Component {
   constructor(props) {
     super(props);
-    this.state = { email: "", password: "", username: "" };
-
+    this.state = { email: "", password: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -48,7 +47,7 @@ class SignIn extends Component {
               E-Mail/Username
             </label>
             <input
-              type="email"
+              type="text"
               id="email"
               className="form-field-input"
               placeholder="email"

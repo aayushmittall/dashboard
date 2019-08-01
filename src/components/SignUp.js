@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 class SignUp extends Component {
   constructor(props) {
     super(props);
-
-    this.initialState = {
+    this.state = {
       email: "",
       password: "",
       firstname: "",
@@ -15,8 +14,6 @@ class SignUp extends Component {
       country: "",
       gender: ""
     };
-    this.state = this.initialState;
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
