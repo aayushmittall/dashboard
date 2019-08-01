@@ -32,7 +32,7 @@ func CloseDb() {
 func GetUserByUsername(username string) (*model.UserProfile, error) {
 	var err error
 	var profile *model.UserProfile
-	stmtOut, err := db.Prepare("SELECT * FROM user_profile WHERE username  = ? ")
+	stmtOut, err := db.Prepare("SELECT * FROM user_profile WHERE Username  = ? or Email=? ")
 	if err != nil {
 		log.Print(err)
 		return nil, err
