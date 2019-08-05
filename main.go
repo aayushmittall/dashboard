@@ -26,7 +26,6 @@ func main() {
 
 	r.HandleFunc("/signup", handlers.HandleSignUp).Methods("POST")
 	r.HandleFunc("/signin", handlers.HandleSignIn).Methods("POST")
-	r.HandleFunc("/editprofile", handlers.HandleEditProfile).Methods("PUT")
 
 	log.Println("Started server on - 127.0.0.1:8000")
 	go func() {

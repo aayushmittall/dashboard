@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `dashboard` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `dashboard`;
 -- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
 -- Host: localhost    Database: dashboard
@@ -14,6 +16,21 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `user_auth`
+--
+
+DROP TABLE IF EXISTS `user_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `user_auth` (
+  `User_Id` int(11) NOT NULL,
+  `Token` varchar(100) DEFAULT NULL,
+  `TimeGenerated` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`User_Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user_profile`
@@ -35,7 +52,7 @@ CREATE TABLE `user_profile` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Email_UNIQUE` (`Email`),
   UNIQUE KEY `Username_UNIQUE` (`Username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -47,4 +64,4 @@ CREATE TABLE `user_profile` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-15 22:54:23
+-- Dump completed on 2019-07-31 10:14:03
