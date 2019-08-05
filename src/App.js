@@ -4,11 +4,10 @@ import { HashRouter as Router, Route } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import "./App.css";
 import SignIn from "./components/SignIn";
-import EditProfile from "./components/EditProfile";
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { isLoggedIn: false };
   }
   render() {
@@ -20,11 +19,6 @@ class App extends Component {
               Analytics Dashboard
             </Link>
           </div>
-          <div>
-            <Link to="/edit-profile" className="nav-edit">
-              Edit Profile
-            </Link>
-          </div>
         </nav>
 
         <div className="app">
@@ -32,7 +26,6 @@ class App extends Component {
           <div className="app-form">
             <Route exact path="/" component={SignUp} />
             <Route exact path="/sign-in" component={SignIn} />
-            <Route exact path="/edit-profile" component={EditProfile} />
           </div>
         </div>
       </Router>

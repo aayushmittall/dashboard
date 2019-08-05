@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 class SignUp extends Component {
   constructor(props) {
     super(props);
-
-    this.initialState = {
+    this.state = {
       email: "",
       password: "",
       firstname: "",
@@ -15,8 +14,6 @@ class SignUp extends Component {
       country: "",
       gender: ""
     };
-    this.state = this.initialState;
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -31,14 +28,12 @@ class SignUp extends Component {
     });
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
     console.log("The form was submitted with the following data:");
     console.log(this.state);
     const data = this.state;
     console.log(JSON.stringify(data));
-    let response;
-
     let apiUrl = "http://localhost:8000/signup";
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -47,12 +42,9 @@ class SignUp extends Component {
       body: JSON.stringify(data),
       myHeaders
     };
-    fetch(apiUrl, options)
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ response: result.res });
-      });
-    alert({ response });
+    const response = await fetch(apiUrl, options);
+    const responsedata = await response.json();
+    console.log(responsedata);
   }
 
   render() {
@@ -69,7 +61,6 @@ class SignUp extends Component {
               type="text"
               id="firstname"
               className="form-field-input"
-              placeholder="Enter your first name"
               name="firstname"
               value={this.state.name}
               onChange={this.handleChange}
@@ -84,7 +75,6 @@ class SignUp extends Component {
               type="text"
               id="lastname"
               className="form-field-input"
-              placeholder="Enter your last name"
               name="lastname"
               value={this.state.name}
               onChange={this.handleChange}
@@ -99,7 +89,7 @@ class SignUp extends Component {
               type="email"
               id="email"
               className="form-field-input"
-              placeholder="Enter your email"
+              placeholder="email"
               name="email"
               value={this.state.email}
               onChange={this.handleChange}
@@ -114,7 +104,6 @@ class SignUp extends Component {
               type="password"
               id="password"
               className="form-field-input"
-              placeholder="Enter your password"
               name="password"
               value={this.state.password}
               onChange={this.handleChange}
@@ -131,7 +120,6 @@ class SignUp extends Component {
               type="text"
               id="username"
               className="form-field-input"
-              placeholder="Enter your first name"
               name="username"
               value={this.state.name}
               onChange={this.handleChange}
@@ -192,7 +180,6 @@ class SignUp extends Component {
               type="text"
               id="country"
               className="form-field-input"
-              placeholder="Enter your country"
               name="country"
               value={this.state.name}
               onChange={this.handleChange}

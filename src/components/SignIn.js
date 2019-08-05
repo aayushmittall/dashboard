@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 class SignIn extends Component {
   constructor(props) {
     super(props);
-    this.state = { email: "", password: "", username: "" };
-
+    this.state = { email: "", password: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -20,12 +19,11 @@ class SignIn extends Component {
     });
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
     console.log("The form was submitted with the following data:");
     console.log(this.state);
     const data = this.state;
-
     let apiUrl = "http://localhost:8000/signin";
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -34,11 +32,9 @@ class SignIn extends Component {
       body: JSON.stringify(data),
       myHeaders
     };
-    fetch(apiUrl, options)
-      .then(res => res.json())
-      .then(result => {
-        this.setState({ response: result.res });
-      });
+    const response = await fetch(apiUrl, options);
+    const responsedata = await response.json();
+    console.log(responsedata);
   }
   render() {
     return (
@@ -48,13 +44,13 @@ class SignIn extends Component {
         <form onSubmit={this.handleSubmit} className="form-fields">
           <div className="form-field">
             <label className="form-field-label" htmlFor="email">
-              E-Mail Address
+              E-Mail/Username
             </label>
             <input
-              type="email"
+              type="text"
               id="email"
               className="form-field-input"
-              placeholder="Enter your email"
+              placeholder="email"
               name="email"
               value={this.state.email}
               onChange={this.handleChange}
@@ -69,7 +65,7 @@ class SignIn extends Component {
               type="password"
               id="password"
               className="form-field-input"
-              placeholder="Enter your password"
+              placeholder="password"
               name="password"
               value={this.state.password}
               onChange={this.handleChange}
